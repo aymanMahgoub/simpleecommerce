@@ -14,7 +14,6 @@ class productController extends Controller
     {
         $product = Product::latest('created_at')->paginate(10);
 
-        // Count all Products in Products Table
         $productCount = Product::all()->count();
         
         return view('product.show',compact('product','productCount'));
@@ -32,36 +31,25 @@ class productController extends Controller
     {
         $featured = Input::has('featured') ? true : false;
 
-        // Replace any "/" with a space.
         $product_name =  str_replace("/", " " ,$request->input('product_name'));
 
+        $product = Product::create([
+            'product_name' => $product_name,
+            'product_qty' => $request->input('product_qty'),
+            'price' => $request->input('price'),
+            'reduced_price' => $request->input('reduced_price'),
+            'cat_id' => $request->input('cat_id'),
+            'featured' => $featured,
+            'description' => $request->input('description'),
+        ]);
 
-            // Create the product in DB
-            $product = Product::create([
-                'product_name' => $product_name,
-                'product_qty' => $request->input('product_qty'),
-                //'product_sku' => $request->input('product_sku'),
-                'price' => $request->input('price'),
-                'reduced_price' => $request->input('reduced_price'),
-                'cat_id' => $request->input('cat_id'),
-                //'brand_id' => $request->input('brand_id'),
-                'featured' => $featured,
-                'description' => $request->input('description'),
-                //'product_spec' => $request->input('product_spec'),
-            ]);
+        $product->save();
 
-            // Save the product into the Database.
-            $product->save();
+        flash()->success('Success', 'Product created successfully!');
+       
 
-            // Flash a success message
-            flash()->success('Success', 'Product created successfully!');
-       // }
-
-
-        // Redirect back to Show all products page.
         $product = Product::latest('created_at')->paginate(10);
 
-        // Count all Products in Products Table
         $productCount = Product::all()->count();
         
         return view('product.show',compact('product','productCount'));
@@ -78,9 +66,7 @@ class productController extends Controller
 
         $categories = Category::whereNull('parent_id')->get();
 
-
-        // Return view with products and categories
-        return view('product.edit', compact('product', 'categories'));
+         return view('product.edit', compact('product', 'categories'));
 
     }
 
@@ -88,32 +74,23 @@ class productController extends Controller
     {
         $featured = Input::has('featured') ? true : false;
 
-        // Find the Products ID from URL in route
         $product = Product::findOrFail($id);
 
+        $product->update(array(
+            'product_name' => $request->input('product_name'),
+            'product_qty' => $request->input('product_qty'),
+            'price' => $request->input('price'),
+            'reduced_price' => $request->input('reduced_price'),
+            'cat_id' => $request->input('cat_id'),
+            'featured' => $featured,
+            'description' => $request->input('description'),
+        ));
 
+        $product->update($request->all());
+        flash()->success('Success', 'Product updated successfully!');
         
-            // Update product
-            $product->update(array(
-                'product_name' => $request->input('product_name'),
-                'product_qty' => $request->input('product_qty'),
-                'price' => $request->input('price'),
-                'reduced_price' => $request->input('reduced_price'),
-                'cat_id' => $request->input('cat_id'),
-                'featured' => $featured,
-                'description' => $request->input('description'),
-                ));
+        $product = Product::latest('created_at')->paginate(10);
 
-
-            // Update the product with all the validation rules
-            $product->update($request->all());
-
-            // Flash a success message
-            flash()->success('Success', 'Product updated successfully!');
-        
-             $product = Product::latest('created_at')->paginate(10);
-
-        // Count all Products in Products Table
         $productCount = Product::all()->count();
         
         return view('product.show',compact('product','productCount'));
@@ -131,23 +108,18 @@ class productController extends Controller
     }
 
     public function categoryAPI() {
-        // Get the "option" value from the drop-down.
+       
         $input = Input::get('option');
 
-        // Find the category name associated with the "option" parameter.
         $category = Category::find($input);
 
-        // Find all the children (sub-categories) from the parent category
-        // so we can display then in the sub-category drop-down list.
         $subcategory = $category->children();
 
-        // Return a Response, and make a request to get the id and category (name)
         return \Response::make($subcategory->get(['id', 'category']));
     }
 
      public function displayImageUploadPage($id) {
 
-        // Get the product ID that matches the URL product ID.
         $product = Product::where('id', '=', $id)->get();
 
        
@@ -156,10 +128,8 @@ class productController extends Controller
     
      public function showproduct($product_name) {
 
-        // Find the product by the product name in URL
         $product = Product::ProductLocatedAt($product_name);
-
-        
+ 
         return view('visitor.show_product', compact('product'));
     }
 }

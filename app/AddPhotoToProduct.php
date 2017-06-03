@@ -35,49 +35,29 @@ class AddPhotoToProduct {
     }
 
 
-    /**
-     * Process the form.
-     */
+  
     public function save() {
 
-        // Attach the photo to the product.
         $photo = $this->product->addPhoto($this->makePhoto());
 
-        // move a file to the base directory with the file name.
         $this->file->move($photo->baseDir(), $photo->name);
 
-        // Generate a photo thumbnail.
         $this->thumbnail->make($photo->path, $photo->thumbnail_path);
     }
 
 
-    /**
-     * Make a new Photo Instance.
-     *
-     * @return ProductPhoto
-     */
     protected function makePhoto() {
         return new Photo(['name' => $this->makeFilename()]);
     }
 
-
-    /**
-     * Make a Filename, based on the uploaded file.
-     *
-     * @return string
-     */
     protected function makeFilename() {
 
-        // Get the file name original name
-        // and encrypt it with sha1
         $name = sha1 (
             time() . $this->file->getClientOriginalName()
         );
 
-        // Get the extension of the photo.
         $extension = $this->file->getClientOriginalExtension();
 
-        // Then set name = merge those together.
         return "{$name}.{$extension}";
     }
 

@@ -1,15 +1,6 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+
 
 Route::get('/', function () {
     return redirect('home');
@@ -50,7 +41,7 @@ Route::resource('category','categoryController');
         
     ]);
 
-    /** Show the Admin Edit Categories Page **/
+    /** Show the Edit Categories Page **/
     Route::get('category/editsub/{id}', [
         'uses' => 'categoryController@editSubCategories',
         'as'   => 'category.editsub'
@@ -78,7 +69,6 @@ Route::resource('category','categoryController');
         
     ]);
 
-//product
     
      Route::get('admin/products/{id}', [
         'uses' => 'productController@displayImageUploadPage',
