@@ -19,13 +19,13 @@
 
             <br>
 
-                @if ($products->photos->count() > 7)
-                    <p class="text-center"><b>Cannot upload more than 8 photos for one for One Product. Delete some photos to upload other photos.</b></p><br><br>
+                @if ($products->photos->count() > 3)
+                    <p class="text-center"><b>Cannot upload more than 3 photos for one for One Product. Delete some photos to upload other photos.</b></p><br><br>
                 @else
                     <form method="POST" action="/admin/product/{{$products->id}}/photo" class="dropzone" id="addProductImages" enctype="multipart/form-data">
                         {{ csrf_field() }}
                     </form>
-                    <p class="text-center"><span class="red-text">*</span> Only 8 photos will show up per product on products page</p>
+                    <p class="text-center"><span class="red-text">*</span> Only 3 photos will show up per product on products page</p>
             @endif
 
 
